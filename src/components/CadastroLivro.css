@@ -23,11 +23,11 @@
 .logo-icon {
   width: 50px;
   height: 50px;
-  color: #3b5998;
+  color: #244BC5;
 }
 
 .page-title {
-  color: #3b5998;
+  color: #244BC5;
   font-size: 36px;
   font-weight: 400;
   margin: 0;
@@ -37,7 +37,7 @@
   max-width: 700px;
   margin: 0 auto;
   padding: 60px 40px;
-  background: linear-gradient(135deg, #3b5998 0%, #2d4373 100%);
+  background: linear-gradient(135deg, #244BC5 0%, #2d4373 100%);
   min-height: calc(100vh - 90px);
   display: flex;
   align-items: center;
@@ -106,7 +106,7 @@
 
 .submit-button {
   background: white;
-  color: #3b5998;
+  color: #244BC5;
 }
 
 .submit-button:hover {
@@ -117,11 +117,26 @@
 
 .cancel-button {
   background: white;
-  color: #3b5998;
+  color: #244BC5;
 }
 
 .cancel-button:hover {
   background: #f0f0f0;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error-message {
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.form-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }

@@ -1,28 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { livroService, movimentacaoService } from '../services/api';
 import Logo from './Logo';
 import './Estoque.css';
 
 function Estoque() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    titulo: '',
+    idLivro: '',
     tipoMovimento: '',
     quantidade: ''
   });
-
-  // Lista mockada de livros para o dropdown
-  const livrosDisponiveis = [
-    'A Volta ao Mundo em 80 Dias',
-    'O velho e o menino',
-    'As coisas que você só vê quando desacelera',
-    'O Homem que Calculava'
-  ];
+  const [livros, setLivros] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const tiposMovimento = [
-    'Entrada',
-    'Saída'
+    { id: 1, nome: 'Entrada' },
+    { id: 2, nome: 'Saída' }
   ];
+
+  // Carregar livros ao montar o componente
+  useEffect(() => {
+    carregarLivros();
+  }, []);
+
+  const carregarLivros = async () => {
+    try {
+      const response = await livroService.listarTodos();
+      if (response.status_code === 200) {
+        setLivros(response.data);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar livros:', err);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -31,11 +43,49 @@ function Estoque() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui virá a integração com a API
-    console.log('Registrando movimento:', formData);
-    navigate('/dashboard');
+    setError('');
+    setLoading(true);
+
+    // Validação
+    if (!formData.idLivro || !formData.tipoMovimento || !formData.quantidade) {
+      setError('Por favor, preencha todos os campos');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Obter o usuário do localStorage
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      if (!usuario) {
+        setError('Usuário não encontrado. Faça login novamente.');
+        setLoading(false);
+        return;
+      }
+
+      const movimentacaoData = {
+        id_movimentacao: parseInt(formData.tipoMovimento),
+        id_usuario: usuario.id,
+        quantidade: parseInt(formData.quantidade),
+        data_movimentacao: new Date().toISOString().split('T')[0],
+        id_livro: parseInt(formData.idLivro)
+      };
+
+      const response = await movimentacaoService.registrar(movimentacaoData);
+      
+      if (response.status_code === 201) {
+        alert('Movimentação registrada com sucesso!');
+        navigate('/dashboard');
+      } else {
+        setError('Erro ao registrar movimentação. Tente novamente.');
+      }
+    } catch (err) {
+      setError('Erro ao registrar movimentação. Verifique os dados.');
+      console.error('Erro ao registrar movimentação:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -55,17 +105,18 @@ function Estoque() {
 
       <div className="estoque-content">
         <form onSubmit={handleSubmit} className="estoque-form">
+          {error && <div className="error-message">{error}</div>}
           <div className="form-group">
             <div className="select-wrapper">
               <select
-                name="titulo"
-                value={formData.titulo}
+                name="idLivro"
+                value={formData.idLivro}
                 onChange={handleChange}
                 className="form-select"
               >
                 <option value="">TÍTULO</option>
-                {livrosDisponiveis.map((livro, index) => (
-                  <option key={index} value={livro}>{livro}</option>
+                {livros.map((livro) => (
+                  <option key={livro.id} value={livro.id}>{livro.titulo}</option>
                 ))}
               </select>
               <div className="select-arrow">
@@ -85,8 +136,8 @@ function Estoque() {
                 className="form-select"
               >
                 <option value="">TIPO DE MOVIMENTO</option>
-                {tiposMovimento.map((tipo, index) => (
-                  <option key={index} value={tipo}>{tipo}</option>
+                {tiposMovimento.map((tipo) => (
+                  <option key={tipo.id} value={tipo.id}>{tipo.nome}</option>
                 ))}
               </select>
               <div className="select-arrow">
@@ -109,8 +160,8 @@ function Estoque() {
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="form-button submit-button">
-              SALVAR
+            <button type="submit" className="form-button submit-button" disabled={loading}>
+              {loading ? 'SALVANDO...' : 'SALVAR'}
             </button>
             <button type="button" onClick={handleCancel} className="form-button cancel-button">
               CANCELAR

@@ -23,7 +23,7 @@
 .logo-icon {
   width: 50px;
   height: 50px;
-  color: #3b5998;
+  color: #244BC5;
 }
 
 .logo-icon svg {
@@ -32,7 +32,7 @@
 }
 
 .dashboard-title {
-  color: #3b5998;
+  color: #244BC5;
   font-size: 36px;
   font-weight: 400;
   margin: 0;
@@ -42,7 +42,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 40px;
-  background: linear-gradient(135deg, #3b5998 0%, #2d4373 100%);
+  background: linear-gradient(135deg, #244BC5 0%, #2d4373 100%);
   min-height: calc(100vh - 90px);
 }
 
@@ -57,7 +57,7 @@
 .action-button {
   padding: 12px 30px;
   background: white;
-  color: #3b5998;
+  color: #244BC5;
   border: none;
   border-radius: 4px;
   font-size: 14px;
@@ -101,7 +101,7 @@
 }
 
 .books-table tbody tr {
-  background: #3b5998;
+  background: #244BC5;
   border-bottom: 2px solid white;
 }
 
@@ -182,29 +182,8 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  color: #3b5998;
+  color: #244BC5;
   pointer-events: none;
-}
-
-/* Badges de status */
-.status-badge {
-  padding: 6px 14px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: inline-block;
-}
-
-.status-disponivel {
-  background: #4caf50;
-  color: white;
-}
-
-.status-emprestado {
-  background: #ff9800;
-  color: white;
 }
 
 /* Ajuste na tabela para mais colunas */
@@ -212,10 +191,18 @@
   width: 80px;
 }
 
-.books-table td:nth-child(5) {
+/* Mensagens de loading e erro */
+.loading-message,
+.error-message {
+  padding: 40px;
   text-align: center;
+  color: white;
+  font-size: 18px;
+  background: #244BC5;
+  border-radius: 8px;
 }
 
-.books-table th:nth-child(5) {
-  text-align: center;
+.error-message {
+  background: rgba(244, 67, 54, 0.9);
 }
+
